@@ -1,7 +1,7 @@
 const CSS3D = require('css3d')
 const merge = require('merge')
 const {defaultScene} = require('./defaults')
-const {createCamera} = require('./utils')
+const utils = require('./utils')
 
 class WhiteRabbit {
   constructor(cfg) {
@@ -10,7 +10,7 @@ class WhiteRabbit {
   }
 
   newScene = () => {
-    this.camera = createCamera(this.cfg)
+    this.camera = utils.createCamera(this.cfg)
     this.camera.position.y = this.cfg.cameraY
     this.scene = new CSS3D.Scene()
     this.objects = []
@@ -47,7 +47,10 @@ class WhiteRabbit {
     obj.name = 'wr-element-' + opts.idx
     obj.position.x = 0
     obj.position.y = -200
-    obj.position.z = -640
+    obj.position.z = utils.getActualZ(this.camera, this.cfg)
+
+
+    document.getElementById('z-depth').innerText = `Z DEPTH: ${Math.round(obj.position.z)}`
 
     obj.animateIn = tweenOpts => {
       this.scene.add(obj)

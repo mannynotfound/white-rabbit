@@ -90,3 +90,17 @@ body:after {
   width: 100%;
   left: 0;
 }
+
+#stats {
+  position: fixed;
+  background: rgba(0, 0, 0, .75);
+  width: 150px;
+  height: auto;
+  bottom: 20px;
+  right: 20px;
+  color: cyan;
+  padding: 10px;
+  font-family: monospace;
+  line-height: 14px;
+  font-size: 10px;
+}
