@@ -1,5 +1,5 @@
 require('./app.css')
-const WR = require('../index').default
+const WR = require('../src').default
 
 // scene
 const scene = new WR({
