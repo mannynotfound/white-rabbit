@@ -2,6 +2,8 @@ const CSS3D = require('css3d')
 const merge = require('merge')
 const {defaultScene} = require('./defaults')
 const utils = require('./utils')
+const positioner = require('./positioner').default
+const tweener = require('./tweener').default
 
 class WhiteRabbit {
   constructor(cfg) {
@@ -32,8 +34,9 @@ class WhiteRabbit {
     }
 
     let el = document.createElement('div')
+    el.id = `wr-element-${opts.idx}`
     el.className = 'wr-element'
-    el = this.setElement(el, opts)
+    el = utils.setElement(el, opts)
 
     let obj = this.createObject(el, opts)
     el.properties = {object: obj}
@@ -43,40 +46,30 @@ class WhiteRabbit {
 
   createObject = (el, opts = {}) => {
     const obj = new CSS3D.CSS3DObject(el)
-
+    obj.cfg = {...opts}
     obj.name = 'wr-element-' + opts.idx
-    obj.position.x = 0
-    obj.position.y = -200
-    obj.position.z = utils.getActualZ(this.camera, this.cfg)
 
+    const posArgs = [opts, obj, this.cfg]
+    obj.position.x = positioner('x', ...posArgs)
+    obj.position.y = positioner('y', ...posArgs)
+    obj.position.z = positioner('z', ...posArgs)
 
-    document.getElementById('z-depth').innerText = `Z DEPTH: ${Math.round(obj.position.z)}`
+    obj.animate = (tweenOpts, cb) => {
+      if (!tweenOpts.position && !tweenOpts.offset) {
+        return console.warning('Must provide at least position or offset.')
+      }
 
-    obj.animateIn = tweenOpts => {
-      this.scene.add(obj)
-      this.tweenIn(obj, tweenOpts)
+      const tweenPosArgs = [tweenOpts, obj, this.cfg]
+      tweenOpts.to = {
+        x: positioner('x', ...tweenPosArgs),
+        y: positioner('y', ...tweenPosArgs),
+      }
+
+      tweener(obj, tweenOpts, cb)
     }
 
+    this.scene.add(obj)
     return obj
-  };
-
-  setElement = (el, opts = {}) => {
-    const {style, html, className} = opts
-
-    const child = document.createElement('div')
-    child.innerHTML = html || ''
-    child.className = className || ''
-    Object.keys(style).forEach(s => child.style[s] = style[s])
-
-    el.appendChild(child)
-    return el
-  };
-
-  tweenIn = (obj, tweenOpts) => {
-    new CSS3D.TWEEN.Tween(obj.position)
-      .to({ y: 0 }, 2000)
-      .easing(CSS3D.TWEEN.Easing.Exponential.Out)
-      .start()
   };
 }
 

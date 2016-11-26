@@ -4,14 +4,19 @@ const createCamera = opts => new CSS3D.PerspectiveCamera(
   opts.fov, opts.aspectX / opts.aspectY, opts.near, opts.far
 )
 
-const getActualZ = (camera, cfg) => {
-  const degrees = Math.tan(CSS3D.Math.degToRad(camera.fov * 0.5))
-  const fov = (0.5 / degrees * cfg.aspectY)
+const setElement = (el, opts = {}) => {
+  const {style, html, className} = opts
 
-  return -fov - 30 // 30 is size of both scroll bars?
+  const child = document.createElement('div')
+  child.innerHTML = html || ''
+  child.className = className || ''
+  Object.keys(style).forEach(s => child.style[s] = style[s])
+
+  el.appendChild(child)
+  return el
 }
 
 export {
   createCamera,
-  getActualZ,
+  setElement,
 }

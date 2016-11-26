@@ -1,5 +1,5 @@
 export const defaultScene = {
-  fov: 75, // vertical field of view
+  fov: 100, // vertical field of view
   near: 1, // near plane
   far: 5000, // far plane
   cameraY: 0, // initial camera start

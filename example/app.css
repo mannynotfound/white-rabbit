@@ -71,8 +71,7 @@ body:after {
 }
 
 .wr-element {
-  border: 10px solid red;
-  box-sizing: border-box;
+  background: rgba(0, 0, 0, .5);
 }
 
 .wr-element > * {
@@ -81,13 +80,23 @@ body:after {
   justify-content: center;
 }
 
-.wr-thing:before {
+.wr-element > *:before {
   position: absolute;
   content: '';
   top: 0;
   height: 50%;
   background: rgba(0, 0, 0, .5);
   width: 100%;
+  left: 0;
+}
+
+.wr-element > *:after {
+  position: absolute;
+  content: '';
+  top: 0;
+  height: 100%;
+  width: 50%;
+  background: rgba(0, 0, 0, .5);
   left: 0;
 }
 
